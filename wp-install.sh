@@ -52,4 +52,7 @@ wp theme activate theme_nogawa_en \
 wp site option update site_name \
     '野川特許事務所（local）'
 
+# todo: 不要なテーマファイル・プラグインを削除するようにする
+# todo: 各サイトで使用するプラグインの有効化
+
 echo "Installation completed."

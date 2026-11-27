@@ -7,16 +7,19 @@ docker-compose up -d --build
 docker-compose run --rm wpcli bash
 ```
 
-### インストーラー実行
+### インストーラーの実行
 ```
 sh /tmp/wp-install.sh
 ```
 
+## ログイン情報
 [ローカル環境](http://localhost/)にアクセスできれば成功
 
-## ログイン情報
+
 [ログインページ](http://localhost/wp-admin/)
+
 ID: admin
+
 PW: password
 
 # 起動
