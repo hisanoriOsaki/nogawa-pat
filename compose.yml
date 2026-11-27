@@ -1,0 +1,75 @@
+services:
+  wordpress:
+    image: wordpress:6.7-php8.3-apache
+    ports: ["8080:80"]
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wp
+      WORDPRESS_DB_NAME: wp
+      WORDPRESS_DEBUG: "true"
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_DEBUG_LOG', true);
+        define('WP_DEBUG_DISPLAY', false);
+        define('SCRIPT_DEBUG', true);
+        define('WP_REDIS_HOST', 'redis');
+    volumes:
+      - ./wp-content:/var/www/html/wp-content      # テーマ・プラグイン・uploads
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_started }
+    networks: [wp-net]
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: wp
+      MARIADB_USER: wp
+      MARIADB_PASSWORD: wp
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      retries: 10
+    networks: [wp-net]
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports: ["8081:80"]
+    environment:
+      PMA_HOST: db
+      UPLOAD_LIMIT: 128M
+    depends_on: [db]
+    networks: [wp-net]
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP
+    networks: [wp-net]
+
+  redis:
+    image: redis:7-alpine
+    networks: [wp-net]
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    user: "33:33"              # www-dataユーザー
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+    working_dir: /var/www/html
+    depends_on:
+      db: { condition: service_healthy }
+    networks: [wp-net]
+    profiles: ["cli"]         # 通常起動しない
+    command: ["--info"]
+
+volumes:
+  db_data:
+
+networks:
+  wp-net:

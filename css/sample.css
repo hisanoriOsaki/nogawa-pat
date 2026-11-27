@@ -1,0 +1,89 @@
+
+
+
+/*疑似テーブル*/
+
+.grid-table {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.grid-table dt {
+    border-right: 1px solid #ccc;
+    margin-left: 10px;
+}
+
+.grid-table dl {
+    margin-right: 10px;
+}
+
+.grid-table>dt,
+.grid-table dd {
+    padding: 8px 10px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.grid-table dt:first-of-type,
+.grid-table dd:first-of-type {
+    border-top: 1px solid #ccc;
+}
+
+/*
+--------------------------------------
+画面幅576px以上（576px ～）
+--------------------------------------
+*/
+
+@media print,
+screen and (min-width:576px) {
+
+
+}
+
+/*
+--------------------------------------
+画面幅768px以上（768px ～）
+--------------------------------------
+*/
+
+@media print,
+screen and (min-width: 768px) {
+.grid-table.grid-column {
+    grid-template-columns: auto auto auto auto;
+}
+.grid-table.grid-column dt:nth-of-type(2),
+.grid-table.grid-column dd:nth-of-type(2) {
+    border-top: 1px solid #ccc;
+    ;
+}
+
+}
+
+
+/*
+================================
+PC表示用ここから（992px ～）
+================================
+*/
+
+@media print,
+screen and (min-width: 992px) {
+
+}
+
+
+/*900px表示終わり*/
+
+
+/*
+-------------------------------
+画面幅1200以上（1200px ～）
+-------------------------------
+*/
+
+@media (min-width: 1200px) {
+
+
+
+}
