@@ -1,7 +1,7 @@
 services:
   wordpress:
-    image: wordpress:6.7-php8.3-apache
-    ports: ["8080:80"]
+    image: wordpress:7.1.5-php8.3-apache
+    ports: ["127.0.0.1:80:80"]
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wp
@@ -14,8 +14,10 @@ services:
         define('SCRIPT_DEBUG', true);
         define('WP_REDIS_HOST', 'redis');
     volumes:
-      - ./wp-content:/var/www/html/wp-content      # テーマ・プラグイン・uploads
+      - wordpress_data:/var/www/html
+      - ./wp-content:/var/www/html/wp-content
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+      - ./wp-install.sh:/tmp/wp-install.sh:ro
     depends_on:
       db: { condition: service_healthy }
       redis: { condition: service_started }
@@ -60,16 +62,27 @@ services:
     image: wordpress:cli-php8.3
     user: "33:33"              # www-dataユーザー
     volumes:
+      - wordpress_data:/var/www/html
       - ./wp-content:/var/www/html/wp-content
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+      - ./wp-install.sh:/tmp/wp-install.sh:ro
     working_dir: /var/www/html
     depends_on:
       db: { condition: service_healthy }
     networks: [wp-net]
     profiles: ["cli"]         # 通常起動しない
     command: ["--info"]
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wp
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wp
+      HOME: /tmp
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
 
 volumes:
   db_data:
+  wordpress_data:
 
 networks:
   wp-net:

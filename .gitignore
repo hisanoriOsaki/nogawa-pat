@@ -1,4 +1,9 @@
 # ディレクトリ全体を無視
 wp-content/languages/
 wp-content/plugins/
+wp-content/themes/twentytwentyfive/
+wp-content/themes/twentytwentyfour/
+wp-content/themes/twentytwentythree/
+wp-content/upgrade/
 wp-content/uploads/
+wp-content/debug.log
